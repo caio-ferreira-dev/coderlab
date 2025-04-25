@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Product } from '@prisma/client';
+import { Prisma, Product } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +15,24 @@ export class ProductService {
     if (!product) {
       throw new NotFoundException(`Produto com ID "${id}" não encontrado.`);
     }
+
+    return product;
+  }
+
+  async createProduct(
+    data: CreateProductDto,
+  ): Promise<Prisma.ProductGetPayload<{ include: { categories: true } }>> {
+    const product = await this.dbService.product.create({
+      data: {
+        ...data,
+        categories: {
+          connect: data.categories.map((id) => ({ id })),
+        },
+      },
+      include: {
+        categories: true,
+      },
+    });
 
     return product;
   }

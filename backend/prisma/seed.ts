@@ -43,8 +43,16 @@ async function main() {
     },
   });
 
+  const acessorios = await prisma.category.create({
+    data: {
+      id: 'cat4',
+      name: 'Acessórios',
+      parentId: null,
+    },
+  });
+
   console.log(
-    `Categorias ${[eletronicos.name, celulares.name, roupas.name].join(', ')} populadas com sucesso`,
+    `Categorias ${[eletronicos.name, celulares.name, roupas.name, acessorios.name].join(', ')} populadas com sucesso`,
   );
 }
 

@@ -1,7 +1,8 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { Product } from '@prisma/client';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @ApiTags('Produtos')
 @Controller('product')
@@ -11,5 +12,10 @@ export class ProductController {
   @Get(':id')
   async getById(@Param('id') id: string): Promise<Product> {
     return this.productService.findProductById(id);
+  }
+
+  @Post()
+  async create(@Body() data: CreateProductDto): Promise<Product> {
+    return this.productService.createProduct(data);
   }
 }
