@@ -8,6 +8,21 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductService {
   constructor(private readonly dbService: DatabaseService) {}
 
+  async findAllProducts(name?: string): Promise<Product[]> {
+    const isPostgres = process.env.DATABASE_URL?.includes('postgres');
+
+    const whereClause: Prisma.ProductWhereInput = {
+      name: {
+        contains: name,
+        ...(isPostgres && { mode: 'insensitive' }), // Aplica "mode: 'insensitive'" só para PostgreSQL
+      },
+    };
+
+    return this.dbService.product.findMany({
+      where: whereClause,
+    });
+  }
+
   async findProductById(id: string): Promise<Product> {
     const product = await this.dbService.product.findUnique({
       where: { id },

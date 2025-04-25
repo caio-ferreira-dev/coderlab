@@ -6,8 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { Prisma, Product } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -17,6 +24,19 @@ import { UpdateProductDto } from './dto/update-product.dto';
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Listar todos os produtos com filtro opcional por nome',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    description: 'Filtrar produtos pelo nome',
+  })
+  async getAllProducts(@Query('name') name?: string): Promise<Product[]> {
+    return this.productService.findAllProducts(name);
+  }
 
   @ApiOperation({ summary: 'Buscar um produto pelo ID' })
   @ApiParam({
