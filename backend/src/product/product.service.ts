@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Product } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -35,5 +36,35 @@ export class ProductService {
     });
 
     return product;
+  }
+
+  async updateProduct(
+    id: string,
+    data: UpdateProductDto,
+  ): Promise<Prisma.ProductGetPayload<{ include: { categories: true } }>> {
+    const existingProduct = await this.dbService.product.findUnique({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      throw new NotFoundException('Produto não encontrado');
+    }
+
+    const updatedProduct = await this.dbService.product.update({
+      where: { id },
+      data: {
+        ...data,
+        categories: data.categories
+          ? {
+              set: data.categories.map((categoryId) => ({ id: categoryId })),
+            }
+          : undefined,
+      },
+      include: {
+        categories: true,
+      },
+    });
+
+    return updatedProduct;
   }
 }
