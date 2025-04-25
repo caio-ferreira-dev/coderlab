@@ -67,4 +67,18 @@ export class ProductService {
 
     return updatedProduct;
   }
+
+  async deleteProduct(id: string): Promise<Product> {
+    const existing = await this.dbService.product.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Produto com ID ${id} não encontrado`);
+    }
+
+    return this.dbService.product.delete({
+      where: { id },
+    });
+  }
 }
