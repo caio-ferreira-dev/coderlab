@@ -4,4 +4,5 @@ export default interface Product {
   qty: number;
   price: number;
   photo: string;
+  categories: { id: string; name: string }[];
 }

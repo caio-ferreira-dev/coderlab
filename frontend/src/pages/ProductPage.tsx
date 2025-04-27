@@ -9,14 +9,7 @@ import {
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 import { AnimatePresence, motion } from "framer-motion";
-
-interface Product {
-  id: string;
-  name: string;
-  qty: number;
-  price: number;
-  photo: string;
-}
+import Product from "@/types/Product";
 
 export default function ProductList() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -45,6 +38,17 @@ export default function ProductList() {
         });
     });
   };
+
+  function renderCategories(categories: { id: string; name: string }[]) {
+    return categories.map((category) => (
+      <span
+        key={category.id}
+        className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-3.5 py-1.5 rounded-2xl"
+      >
+        {category.name}
+      </span>
+    ));
+  }
 
   return (
     <main className="p-10 bg-gray-100 min-h-screen relative">
@@ -88,15 +92,20 @@ export default function ProductList() {
             {filteredProducts.map((product) => (
               <Card
                 key={product.id}
-                className="flex flex-col items-center p-4 bg-white shadow-md rounded-lg"
+                className="flex flex-col items-center p-4 bg-white shadow-md rounded-lg gap-2"
               >
                 <img
                   src={product.photo}
                   alt={product.name}
-                  className="w-full h-40 object-cover rounded-md mb-4"
+                  className="justify-self-center h-48 object-contain rounded-md mt-4 mb-4"
                 />
                 <h3 className="text-xl font-semibold">{product.name}</h3>
-                <p className="text-gray-500">Quantidade: {product.qty}</p>
+
+                <div className="text-gray-500">
+                  {renderCategories(product.categories)}
+                </div>
+
+                <p className="text-gray-500 mt-6">Quantidade: {product.qty}</p>
                 <p className="text-gray-500">
                   Preço: R$ {product.price.toFixed(2)}
                 </p>
@@ -109,7 +118,7 @@ export default function ProductList() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                      <Link to={"/product/${product.id}"}>
+                      <Link to={`/product/${product.id}`}>
                         <Button variant="link">Editar</Button>
                       </Link>
                     </DropdownMenuItem>

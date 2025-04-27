@@ -119,6 +119,10 @@
   }
 }
 
+body {
+  background-color: var(--color-gray-100);
+}
+
 button:hover {
   cursor: pointer;
 }
