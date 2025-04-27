@@ -56,7 +56,15 @@ export class ProductController {
   @ApiResponse({ status: 201, description: 'Produto criado com sucesso' })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   async create(@Body() data: CreateProductDto): Promise<Product> {
-    return this.productService.createProduct(data);
+    const { name, qty, price, photo, categories } = data;
+    const parsedData = {
+      name,
+      qty: Number(qty),
+      price: Number(price),
+      photo,
+      categories,
+    };
+    return this.productService.createProduct(parsedData);
   }
 
   @Patch(':id')

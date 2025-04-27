@@ -20,12 +20,28 @@ export class ProductService {
 
     return this.dbService.product.findMany({
       where: whereClause,
+      include: {
+        categories: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
   }
 
   async findProductById(id: string): Promise<Product> {
     const product = await this.dbService.product.findUnique({
       where: { id },
+      include: {
+        categories: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (!product) {
