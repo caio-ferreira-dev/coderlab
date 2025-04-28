@@ -85,6 +85,8 @@ To stop and remove the Docker containers, follow these steps:
    npx prisma generate && npx prisma migrate deploy
    ```
 
+   _There's a file inside /prisma named as seed.ts that contains some Category examples, feel free to modify this file and run a `npx prisma db seed` if you want to populate the Category database table._
+
 6. **Build and start the backend application**:
 
    ```bash
